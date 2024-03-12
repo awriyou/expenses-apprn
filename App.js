@@ -6,16 +6,17 @@ import ManageExpenses from './screens/ManageExpenses';
 import RecentExpenses from './screens/RecentExpenses';
 import AllExpenses from './screens/AllExpenses';
 import { GlobalStyles } from './constant/styles';
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons';
 import IconButton from './components/UI/IconButton';
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
-function ExpensesOverview () {
+function ExpensesOverview() {
   return (
     <BottomTabs.Navigator
-      screenOptions={ ({navigation}) => ({ //ini digunakan untuk menggunakan navigate di onPress button pada header dibawah ini
+      screenOptions={({ navigation }) => ({
+        //ini digunakan untuk menggunakan navigate di onPress button pada header dibawah ini
         headerStyle: { backgroundColor: GlobalStyles.colors.primary },
         headerTintColor: 'white',
         tabBarStyle: {
@@ -24,7 +25,14 @@ function ExpensesOverview () {
         },
         tabBarActiveTintColor: GlobalStyles.colors.forth,
         headerRight: ({ tintColor }) => (
-          <IconButton icon="add" size={24} color={tintColor} onPress={() => {navigation.navigate('ManageExpenses')}}/>
+          <IconButton
+            icon="add"
+            size={24}
+            color={tintColor}
+            onPress={() => {
+              navigation.navigate('ManageExpenses');
+            }}
+          />
         ),
       })}
     >
@@ -59,7 +67,16 @@ export default function App() {
     <>
       <StatusBar style="auto" />
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerStyle: { backgroundColor: GlobalStyles.colors.primary },
+            headerTintColor: 'white',
+            tabBarStyle: {
+              backgroundColor: GlobalStyles.colors.primary,
+              paddingBottom: 6,
+            },
+          }}
+        >
           <Stack.Screen
             name="ExpensesOverview"
             component={ExpensesOverview}
@@ -68,7 +85,7 @@ export default function App() {
           <Stack.Screen
             name="ManageExpenses"
             component={ManageExpenses}
-            options={{ }}
+            options={{ presentation: 'modal' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
