@@ -1,8 +1,12 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
 import { GlobalStyles } from '../../constant/styles';
 import { getFormattedDate } from '../../utils/date';
 
 const ExpenseItem = ({ description, amount, date }) => {
+  const navigation = useNavigation();
+
   const formattedAmount = new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
@@ -10,7 +14,9 @@ const ExpenseItem = ({ description, amount, date }) => {
     maximumFractionDigits: 2,
   }).format(amount);
 
-  function expensePressHandler() {}
+  function expensePressHandler() {
+    navigation.navigate('ManageExpenses');
+  }
 
   return (
     <Pressable

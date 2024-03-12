@@ -15,7 +15,7 @@ const BottomTabs = createBottomTabNavigator();
 function ExpensesOverview () {
   return (
     <BottomTabs.Navigator
-      screenOptions={{
+      screenOptions={ ({navigation}) => ({ //ini digunakan untuk menggunakan navigate di onPress button pada header dibawah ini
         headerStyle: { backgroundColor: GlobalStyles.colors.primary },
         headerTintColor: 'white',
         tabBarStyle: {
@@ -24,9 +24,9 @@ function ExpensesOverview () {
         },
         tabBarActiveTintColor: GlobalStyles.colors.forth,
         headerRight: ({ tintColor }) => (
-          <IconButton icon="add" size={24} color={tintColor} onPress={() => {}}/>
+          <IconButton icon="add" size={24} color={tintColor} onPress={() => {navigation.navigate('ManageExpenses')}}/>
         ),
-      }}
+      })}
     >
       <BottomTabs.Screen
         name="RecentExpenses"
