@@ -8,7 +8,7 @@ export const GlobalStyles = {
     fiveth: '#DBE7C9',
     sixth: '#B0C5A4',
     seventh: '#B7E5B4',
-    error: '#FF004D',
+    error: '#D04848',
     gray: '#647D87',
   },
 };

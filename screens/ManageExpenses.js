@@ -14,11 +14,17 @@ const ManageExpenses = ({ route, navigation }) => {
     }); //! ini digunakan untuk set apapun yang ada pada header/etc navigation pada screen nya
   }, [navigation, isEditing]); //! gunakan useEffect untuk merefresh agar bisa reflect langsung
 
-  function deleteExpenseHandler() {}
+  function deleteExpenseHandler() {
+    navigation.goBack();
+  }
 
-  function cancelHandler() {}
+  function cancelHandler() {
+    navigation.goBack();
+  }
 
-  function confirmHandler() {}
+  function confirmHandler() {
+    navigation.goBack();
+  }
 
   return (
     <View style={styles.container}>
