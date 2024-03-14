@@ -1,14 +1,14 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { GlobalStyles } from '../../constant/styles';
 
-const Input = ({ label, textInputConfig }) => {
+const Input = ({ label, style, textInputConfig }) => {
   const inputStyles = [styles.input];
 
   if (textInputConfig && textInputConfig.multiline) {
     inputStyles.push(styles.inputMultiline);
   } //! kondisi ini akan mengatur, jika input component digunakan untuk input multiline
   return (
-    <View style={styles.inputContainer}>
+    <View style={[styles.inputContainer, style]}>
       <Text style={styles.label}>{label}</Text>
       {/* <TextInput keyboardType={type} maxLength={maxLength}/> //! ini akan diubah saja menjadi spreadOperator (object props) */}
       <TextInput style={inputStyles} {...textInputConfig} />
