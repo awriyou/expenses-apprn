@@ -3,14 +3,17 @@ import Input from './Input';
 import { GlobalStyles } from '../../constant/styles';
 import { useState } from 'react';
 import Button from '../UI/Button';
+import { getFormattedDate } from '../../utils/date';
 
-const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel}) => {
+const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel, defaultValues}) => {
   //   const [amountValue, setAmountValue] = useState('') //! NOTE : VALUE UNTUK FORM HARUS TETAP STRING, NANTI BARU DI KONVERSI KE YANG DINGINKAN
   //? state diatas tidak perlu digunakan lagi karena kita akan menggunakan state yang lebih scalable, yaitu dengan cara dibawah ini
   const [inputValues, setInputValues] = useState({
-    amount: '',
-    date: '',
-    description: '',
+    amount: defaultValues ? defaultValues.amount.toString() : '',
+    date: defaultValues ? defaultValues.date.toISOString().slice(0, 10) : '', //kenapa 0 dan 10? karena yang kita ingin ambil dari konversi objet ke string adalah abjad ke 0 sampai 10
+    //! atau kita gunakan getFormattedDate yang sudah dibuat pada utils yg sudah dibuat sebelumnya
+    date: defaultValues ? getFormattedDate(defaultValues.date) : '',
+    description: defaultValues ? defaultValues.description : '',
   });
 
   function inputChangeHandler(inputIdentifier, enteredValue) {
