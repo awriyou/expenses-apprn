@@ -1,11 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import Input from './Input';
 import { GlobalStyles } from '../../constant/styles';
 import { useState } from 'react';
 import Button from '../UI/Button';
 import { getFormattedDate } from '../../utils/date';
 
-const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel, defaultValues}) => {
+const ExpenseForm = ({
+  onCancel,
+  onSubmit,
+  submitButtonLabel,
+  defaultValues,
+}) => {
   //   const [amountValue, setAmountValue] = useState('') //! NOTE : VALUE UNTUK FORM HARUS TETAP STRING, NANTI BARU DI KONVERSI KE YANG DINGINKAN
   //? state diatas tidak perlu digunakan lagi karena kita akan menggunakan state yang lebih scalable, yaitu dengan cara dibawah ini
   const [inputValues, setInputValues] = useState({
@@ -23,12 +28,24 @@ const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel, defaultValues}) => 
   }
 
   function submitHandler() {
-      const expenseData = {
-        amount : + inputValues.amount,
-        date   : new Date(inputValues.date),
-        description : inputValues.description,
-      }
-      onSubmit(expenseData) //! ini adalah cara untuk mengirimkan data yang dimasukan oleh user ke screen manageExpenses yang nantinya akan di proses lagi
+    const expenseData = {
+      amount: +inputValues.amount,
+      date: new Date(inputValues.date),
+      description: inputValues.description,
+    };
+
+    //? CREATE VALIDATION
+    const amountIsValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
+    const dateIsValid = expenseData.date.toString() !== 'Invalid Date';
+    const descriptionIsValid = expenseData.description.trim().length > 0;
+
+    if (!amountIsValid || !dateIsValid || !descriptionIsValid) {
+      //show feedback
+      Alert.alert('Invalid Input', 'Please check your input!!');
+      return;
+    }
+
+    onSubmit(expenseData); //! ini adalah cara untuk mengirimkan data yang dimasukan oleh user ke screen manageExpenses yang nantinya akan di proses lagi
   }
   return (
     <View style={styles.form}>
