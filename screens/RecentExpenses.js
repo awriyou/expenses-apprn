@@ -10,7 +10,7 @@ const RecentExpenses = () => {
         const today = new Date();
         const date7DaysAgo = getDateMinusDays(today, 7);
 
-        return expense.date > date7DaysAgo
+        return (expense.date >= date7DaysAgo) && (expense.date <= today);
     }) //! ini digunakan untuk memfilter expenses yang masuk dalam 7 hari terakhir
   return <ExpensesOutput expenses={recentExpenses} expensesPeriod="Last 7 Days" />;
 };
