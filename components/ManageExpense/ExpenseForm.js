@@ -2,8 +2,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import Input from './Input';
 import { GlobalStyles } from '../../constant/styles';
 import { useState } from 'react';
+import Button from '../UI/Button';
 
-const ExpenseForm = () => {
+const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel}) => {
   //   const [amountValue, setAmountValue] = useState('') //! NOTE : VALUE UNTUK FORM HARUS TETAP STRING, NANTI BARU DI KONVERSI KE YANG DINGINKAN
   //? state diatas tidak perlu digunakan lagi karena kita akan menggunakan state yang lebih scalable, yaitu dengan cara dibawah ini
   const [inputValues, setInputValues] = useState({
@@ -16,6 +17,10 @@ const ExpenseForm = () => {
     setInputValues((curInputValues) => {
       return { ...curInputValues, [inputIdentifier]: enteredValue }; //! cara ini akan membuat kita dapat set value secara dinamis
     });
+  }
+
+  function submitHandler() {
+      
   }
   return (
     <View style={styles.form}>
@@ -49,6 +54,14 @@ const ExpenseForm = () => {
           value: inputValues.description,
         }}
       />
+      <View style={styles.buttons}>
+        <Button style={styles.button} mode="flat" onPress={onCancel}>
+          Cancel
+        </Button>
+        <Button style={styles.button} onPress={submitHandler}>
+          {submitButtonLabel}
+        </Button>
+      </View>
     </View>
   );
 };
@@ -72,5 +85,14 @@ const styles = StyleSheet.create({
   },
   rowInput: {
     flex: 1,
+  },
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
   },
 });
