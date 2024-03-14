@@ -1,19 +1,33 @@
 import { StyleSheet, Text, View } from 'react-native';
 import Input from './Input';
 import { GlobalStyles } from '../../constant/styles';
+import { useState } from 'react';
 
 const ExpenseForm = () => {
-  function amountChangeHandler() {}
+  //   const [amountValue, setAmountValue] = useState('') //! NOTE : VALUE UNTUK FORM HARUS TETAP STRING, NANTI BARU DI KONVERSI KE YANG DINGINKAN
+  //? state diatas tidak perlu digunakan lagi karena kita akan menggunakan state yang lebih scalable, yaitu dengan cara dibawah ini
+  const [inputValues, setInputValues] = useState({
+    amount: '',
+    date: '',
+    description: '',
+  });
+
+  function inputChangeHandler(inputIdentifier, enteredValue) {
+    setInputValues((curInputValues) => {
+      return { ...curInputValues, [inputIdentifier]: enteredValue }; //! cara ini akan membuat kita dapat set value secara dinamis
+    });
+  }
   return (
     <View style={styles.form}>
-    <Text style={styles.title}>Your Expense</Text>
+      <Text style={styles.title}>Your Expense</Text>
       <View style={styles.inputRow}>
         <Input
           style={styles.rowInput}
           label="Amount"
           textInputConfig={{
             keyboardType: 'decimal-pad',
-            onChangeText: amountChangeHandler,
+            onChangeText: inputChangeHandler.bind(this, 'amount'),
+            value: inputValues.amount,
           }}
         />
         <Input
@@ -22,7 +36,8 @@ const ExpenseForm = () => {
           textInputConfig={{
             placeholder: 'YYYY-MM-DD',
             maxLength: 10,
-            onChangeText: () => {},
+            onChangeText: inputChangeHandler.bind(this, 'date'),
+            value: inputValues.date,
           }}
         />
       </View>
@@ -30,6 +45,8 @@ const ExpenseForm = () => {
         label="Description"
         textInputConfig={{
           multiline: true,
+          onChangeText: inputChangeHandler.bind(this, 'description'),
+          value: inputValues.description,
         }}
       />
     </View>
@@ -39,16 +56,16 @@ const ExpenseForm = () => {
 export default ExpenseForm;
 
 const styles = StyleSheet.create({
-    form: {
-        marginTop: 80,
-    },
-    title:{
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: GlobalStyles.colors.primary,
-        marginVertical: 12,
-        textAlign: 'center',
-    },
+  form: {
+    marginTop: 80,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: GlobalStyles.colors.primary,
+    marginVertical: 12,
+    textAlign: 'center',
+  },
   inputRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
