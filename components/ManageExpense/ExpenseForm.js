@@ -20,7 +20,12 @@ const ExpenseForm = ({onCancel, onSubmit, submitButtonLabel}) => {
   }
 
   function submitHandler() {
-      
+      const expenseData = {
+        amount : + inputValues.amount,
+        date   : new Date(inputValues.date),
+        description : inputValues.description,
+      }
+      onSubmit(expenseData) //! ini adalah cara untuk mengirimkan data yang dimasukan oleh user ke screen manageExpenses yang nantinya akan di proses lagi
   }
   return (
     <View style={styles.form}>
