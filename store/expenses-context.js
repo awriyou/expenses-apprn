@@ -68,10 +68,12 @@ export const ExpensesContext = createContext({
 function expensesReducer(state, action) {
   switch (action.type) {
     case 'ADD':
-      const id = new Date().toString() + Math.random().toString();
-      return [{ ...action.payload, id: id }, ...state];
+      // const id = new Date().toString() + Math.random().toString(); //! sudah tidak perlu digunakan karena sudah memiliki id bawaan dari firebase
+      return [action.payload, ...state];
     case 'SET':
       return action.payload
+      //? const inverted = action.paylaod.reverse();
+      //? return inverted //! baris kode ini digunakan untuk mengubah orderBy
     case 'UPDATE':
       const updatableExpenseIndex = state.findIndex((expense) => {
         return expense.id === action.payload.id;
