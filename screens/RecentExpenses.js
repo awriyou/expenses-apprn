@@ -5,31 +5,43 @@ import { ExpensesContext } from '../store/expenses-context';
 import { getDateMinusDays } from '../utils/date';
 import { fetchExpenses } from '../utils/http';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 const RecentExpenses = () => {
-  const [isFetching, setIsFetching] = useState(true) //gunakan state ini untuk loading overlay
+  const [isFetching, setIsFetching] = useState(true); //gunakan state ini untuk loading overlay
+  const [error, setError] = useState(false);
   const expensesCtx = useContext(ExpensesContext);
   // const [fetchedExpenses, setFetchedExpenses] = useState([]) //!gajadi
 
   useEffect(() => {
-    async function getExpenses(){
-      setIsFetching(true)
-      const expenses = await fetchExpenses()
+    async function getExpenses() {
+      setIsFetching(true);
+      try {
+        const expenses = await fetchExpenses();
+        expensesCtx.setExpenses(expenses);
+      } catch (err) {
+        setError('Could not get expenses!');
+      }
       // setFetchedExpenses(expenses) //! gajadi, pakai ctx
-      expensesCtx.setExpenses(expenses)
-      setIsFetching(false)
+      setIsFetching(false);
     }
-
     getExpenses();
-  }, [])
+  }, []);
 
-  if(isFetching){
-    return <LoadingOverlay />
+  function errorHandler() {
+    setError(null)
   }
 
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler}/>
+  }
+
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
 
   const recentExpenses = expensesCtx.expenses.filter((expense) => {
-  // const recentExpenses = fetchedExpenses.filter((expense) => {//!gajadi
+    // const recentExpenses = fetchedExpenses.filter((expense) => {//!gajadi
     const today = new Date();
     const date7DaysAgo = getDateMinusDays(today, 7);
 

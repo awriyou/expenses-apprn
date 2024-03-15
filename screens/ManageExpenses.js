@@ -7,9 +7,11 @@ import { ExpensesContext } from '../store/expenses-context';
 import ExpenseForm from '../components/ManageExpense/ExpenseForm';
 import { deleteExpense, storeExpense, updateExpense } from '../utils/http';
 import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 const ManageExpenses = ({ route, navigation }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false) //for loading overlay
+  const [error, setError] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false); //for loading overlay
   const expensesCtx = useContext(ExpensesContext);
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -26,11 +28,14 @@ const ManageExpenses = ({ route, navigation }) => {
 
   async function deleteExpenseHandler() {
     setIsSubmitting(true);
-    await deleteExpense(editedExpenseId)
-    // setIsSubmitting(false);
-
-    expensesCtx.deleteExpense(editedExpenseId);
-    navigation.goBack();
+    try {
+      await deleteExpense(editedExpenseId);
+      expensesCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (err) {
+      setError('Could not delete expense - please try again later!');
+      setIsSubmitting(false);
+    }
   }
 
   function cancelHandler() {
@@ -38,19 +43,31 @@ const ManageExpenses = ({ route, navigation }) => {
   }
 
   async function confirmHandler(expenseData) {
-    setIsSubmitting(true)
-    if (isEditing) {
-      expensesCtx.updateExpense(editedExpenseId, expenseData);
-      updateExpense(editedExpenseId, expenseData)
-    } else {
-      const id = await storeExpense(expenseData)
-      expensesCtx.addExpense({...expenseData, id: id});
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        expensesCtx.updateExpense(editedExpenseId, expenseData);
+        updateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await storeExpense(expenseData);
+        expensesCtx.addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (err) {
+      setError('Could not save expense - please try again later!');
+      setIsSubmitting(false);
     }
-    navigation.goBack();
   }
 
-  if (isSubmitting){
-    return <LoadingOverlay />
+  function errorHandler() {
+    setError(null);
+  }
+  if (error && !isSubmitting) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay />;
   }
 
   return (
@@ -59,7 +76,7 @@ const ManageExpenses = ({ route, navigation }) => {
         onCancel={cancelHandler}
         submitButtonLabel={isEditing ? 'Update' : 'Add'}
         onSubmit={confirmHandler}
-        defaultValues = {selectedExpense}
+        defaultValues={selectedExpense}
       />
 
       {isEditing && (
