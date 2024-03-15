@@ -1,23 +1,32 @@
 import { Text } from 'react-native';
 import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ExpensesContext } from '../store/expenses-context';
 import { getDateMinusDays } from '../utils/date';
 import { fetchExpenses } from '../utils/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
 
 const RecentExpenses = () => {
+  const [isFetching, setIsFetching] = useState(true) //gunakan state ini untuk loading overlay
   const expensesCtx = useContext(ExpensesContext);
   // const [fetchedExpenses, setFetchedExpenses] = useState([]) //!gajadi
 
   useEffect(() => {
     async function getExpenses(){
+      setIsFetching(true)
       const expenses = await fetchExpenses()
       // setFetchedExpenses(expenses) //! gajadi, pakai ctx
       expensesCtx.setExpenses(expenses)
+      setIsFetching(false)
     }
 
     getExpenses();
   }, [])
+
+  if(isFetching){
+    return <LoadingOverlay />
+  }
+
 
   const recentExpenses = expensesCtx.expenses.filter((expense) => {
   // const recentExpenses = fetchedExpenses.filter((expense) => {//!gajadi
